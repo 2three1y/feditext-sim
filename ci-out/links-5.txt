@@ -1,0 +1,5 @@
+run=5
+size=72053996
+sha256=d3994edf982089805d5ad36aadd5fca43928e0d6e1ef7201908896081da5b331
+litterbox=https://litter.catbox.moe/rh9snb.zip
+bashupload=

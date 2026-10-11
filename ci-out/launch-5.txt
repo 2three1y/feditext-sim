@@ -1,0 +1,13 @@
+== codesign
+2026-10-11 08:29:04.901 plutil[13662:44537] CFPropertyListCreateFromXMLData(): Old-style plist parser: missing semicolon in dictionary on line 2. Parsing will be abandoned. Break on _CFPropertyListMissingSemicolon to debug.
+<stdin>: Unexpected character E at line 1
+== __entitlements section
+0000000100003bf4	3c 3f 78 6d 6c 20 76 65 72 73 69 6f 6e 3d 22 31 
+0000000100003c04	2e 30 22 20 65 6e 63 6f 64 69 6e 67 3d 22 55 54 
+0000000100003c14	46 2d 38 22 3f 3e 0a 3c 21 44 4f 43 54 59 50 45 
+0000000100003c24	20 70 6c 69 73 74 20 50 55 42 4c 49 43 20 22 2d 
+0000000100003c34	2f 2f 41 70 70 6c 65 2f 2f 44 54 44 20 50 4c 49 
+device DC4CD8B3-4457-4153-9087-A0D7A2F9BFD9
+com.gotgoat.metatext: 15614
+== running after 20 s:
+15614	0	UIKitApplication:com.gotgoat.metatext[514e][rb-legacy]
