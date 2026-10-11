@@ -1,0 +1,30 @@
+name: Mirror Feditext branches into this repo
+on:
+  workflow_dispatch:
+    inputs:
+      branches:
+        description: Space-separated upstream branches to mirror (full history) into branches of the same name here
+        default: app-store-testflight develop link-menu status-filters
+        required: true
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Fetch upstream branches and push them here
+        env:
+          BRANCHES: ${{ inputs.branches }}
+        run: |
+          git remote add upstream https://github.com/feditext/feditext.git
+          for b in $BRANCHES; do
+            echo "== $b"
+            git fetch --no-tags upstream "$b:refs/remotes/upstream/$b"
+            git push origin "refs/remotes/upstream/$b:refs/heads/$b"
+          done
+          git ls-remote --heads origin

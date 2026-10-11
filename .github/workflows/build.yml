@@ -3,9 +3,13 @@ on:
   workflow_dispatch:
     inputs:
       branch:
-        description: Feditext branch to build
+        description: Branch to build
         default: app-store-testflight
         required: true
+      repo:
+        description: Repository to clone (owner/name); default is this repo once branches are mirrored here, or feditext/feditext
+        default: ""
+        required: false
       xcode:
         description: Xcode app name under /Applications (blank = newest Xcode 16)
         default: ""
@@ -18,14 +22,15 @@ jobs:
       contents: write
     env:
       BRANCH: ${{ inputs.branch || 'app-store-testflight' }}
+      SRC_REPO: ${{ inputs.repo || github.repository }}
       XCODE_APP: ${{ inputs.xcode }}
     steps:
       - name: Checkout this repo
         uses: actions/checkout@v4
       - name: Clone Feditext (GPL-3, github.com/feditext/feditext)
         run: |
-          git clone --depth 1 -b "$BRANCH" https://github.com/feditext/feditext.git src
-          echo "$BRANCH $(cd src && git rev-parse HEAD)" > feditext-commit.txt
+          git clone --depth 1 -b "$BRANCH" "https://github.com/$SRC_REPO.git" src
+          echo "$SRC_REPO $BRANCH $(cd src && git rev-parse HEAD)" > feditext-commit.txt
           cat feditext-commit.txt
       - name: Pick Xcode
         run: |
