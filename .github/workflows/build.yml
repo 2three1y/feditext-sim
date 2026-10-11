@@ -1,0 +1,94 @@
+name: Feditext simulator build
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: Feditext branch to build
+        default: app-store-testflight
+        required: true
+      xcode:
+        description: Xcode app name under /Applications (blank = newest Xcode 16)
+        default: ""
+        required: false
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 80
+    permissions:
+      contents: write
+    env:
+      BRANCH: ${{ inputs.branch || 'app-store-testflight' }}
+      XCODE_APP: ${{ inputs.xcode }}
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v4
+      - name: Clone Feditext (GPL-3, github.com/feditext/feditext)
+        run: |
+          git clone --depth 1 -b "$BRANCH" https://github.com/feditext/feditext.git src
+          echo "$BRANCH $(cd src && git rev-parse HEAD)" > feditext-commit.txt
+          cat feditext-commit.txt
+      - name: Pick Xcode
+        run: |
+          ls -d /Applications/Xcode*.app
+          if [ -z "$XCODE_APP" ]; then XCODE_APP=$(ls -d /Applications/Xcode_16*.app 2>/dev/null | sort -V | tail -1); fi
+          if [ -n "$XCODE_APP" ] && [ -d "$XCODE_APP" ]; then sudo xcode-select -s "$XCODE_APP"; fi
+          xcodebuild -version | tee xcode-info.txt
+          xcrun simctl list runtimes | tee -a xcode-info.txt
+          (cd src && xcodebuild -list -project Feditext.xcodeproj) | tee -a xcode-info.txt
+      - name: Resolve packages
+        working-directory: src
+        run: xcodebuild -resolvePackageDependencies -project Feditext.xcodeproj -scheme Feditext -derivedDataPath build 2>&1 | tee ../resolve.log | tail -30
+      - name: Build for iOS Simulator (Debug, unsigned)
+        working-directory: src
+        run: |
+          set -o pipefail
+          xcodebuild -project Feditext.xcodeproj -scheme Feditext -configuration Debug \
+            -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" DEVELOPMENT_TEAM="" \
+            -skipPackagePluginValidation -skipMacroValidation \
+            build 2>&1 | tee ../build.log | (grep -E "error:|BUILD|Linking" || true) | tail -60
+      - name: Zip the app
+        run: |
+          ls -la src/build/Build/Products/Debug-iphonesimulator/
+          cd src/build/Build/Products/Debug-iphonesimulator && zip -qr -y "$GITHUB_WORKSPACE/Feditext.app.zip" Feditext.app
+          ls -la "$GITHUB_WORKSPACE/Feditext.app.zip"
+      - name: Upload artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Feditext-sim-${{ github.run_number }}
+          path: |
+            Feditext.app.zip
+            build.log
+            resolve.log
+            xcode-info.txt
+            feditext-commit.txt
+          if-no-files-found: warn
+      - name: Record logs and links in the repo
+        if: always()
+        run: |
+          set +e
+          N=${GITHUB_RUN_NUMBER}
+          mkdir -p ci-out
+          cp feditext-commit.txt ci-out/feditext-commit-$N.txt 2>/dev/null
+          head -c 7000 xcode-info.txt > ci-out/xcode-info-$N.txt 2>/dev/null
+          { grep -E "error:|error |fatal|Could not|failed" build.log resolve.log 2>/dev/null | grep -v "warning:" | head -60 | cut -c1-400; echo "--- tail build.log ---"; tail -25 build.log 2>/dev/null | cut -c1-300; } | head -c 7000 > ci-out/errors-$N.txt
+          {
+            echo "run=$N"
+            if [ -f Feditext.app.zip ]; then
+              echo "size=$(stat -f%z Feditext.app.zip)"
+              echo "sha256=$(shasum -a 256 Feditext.app.zip | cut -d' ' -f1)"
+              echo -n "litterbox="; curl -s -F "reqtype=fileupload" -F "time=72h" -F "fileToUpload=@Feditext.app.zip" https://litterbox.catbox.moe/resources/internals/api.php; echo
+              echo -n "bashupload="; curl -s -A "feditext-sim-ci/1.0" -T Feditext.app.zip https://bashupload.com/Feditext.app.zip | tr -d '\n'; echo
+            fi
+            if [ -f build.log ]; then
+              gzip -kf build.log
+              echo -n "log_litterbox="; curl -s -F "reqtype=fileupload" -F "time=72h" -F "fileToUpload=@build.log.gz" https://litterbox.catbox.moe/resources/internals/api.php; echo
+            fi
+          } > ci-out/links-$N.txt
+          cat ci-out/links-$N.txt
+          git config user.name "feditext-sim-ci"
+          git config user.email "ci@users.noreply.github.com"
+          git pull --rebase -q || true
+          git add ci-out && git commit -q -m "ci: output of run $N" && git push
