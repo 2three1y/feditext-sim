@@ -59,7 +59,7 @@ jobs:
               -skipPackagePluginValidation -skipMacroValidation build 2>&1 | tail -5
             mkdir -p ../appdir && cp -R build/Build/Products/Debug-iphonesimulator/Feditext.app ../appdir/
           fi
-          ls appdir
+          ls "$GITHUB_WORKSPACE/appdir"
       - name: Boot the simulator and install
         run: |
           UDID=$(xcrun simctl list devices available | grep -E "iPhone 16 Pro \(" | head -1 | grep -oE "[0-9A-F-]{36}")
