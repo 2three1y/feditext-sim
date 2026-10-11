@@ -1,0 +1,82 @@
+name: Live simulator session
+# Boots an iPhone simulator on a GitHub Mac, installs a Feditext build and serves a small key-protected
+# remote-control endpoint (screenshots, taps, typing, accessibility tree) through a temporary tunnel.
+on:
+  workflow_dispatch:
+    inputs:
+      app_url:
+        description: URL of a zipped Feditext.app simulator build (blank = build the branch below)
+        default: ""
+        required: false
+      repo:
+        description: Repository to build from when app_url is blank
+        default: 2three1y/feditext
+        required: false
+      branch:
+        description: Branch to build when app_url is blank
+        default: app-store-testflight
+        required: false
+      xcode:
+        description: Xcode app path (blank = newest Xcode 16)
+        default: ""
+        required: false
+      minutes:
+        description: How long to keep the session open
+        default: "90"
+        required: false
+jobs:
+  session:
+    runs-on: macos-15
+    timeout-minutes: 180
+    permissions:
+      contents: write
+    env:
+      SIM_KEY: ${{ secrets.SIM_KEY }}
+      APP_URL: ${{ inputs.app_url }}
+      SRC_REPO: ${{ inputs.repo }}
+      BRANCH: ${{ inputs.branch }}
+      XCODE_APP: ${{ inputs.xcode }}
+      MINUTES: ${{ inputs.minutes }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Tools (AXe for taps/typing/accessibility tree, cloudflared for the tunnel)
+        run: |
+          brew install cameroncooke/axe/axe cloudflared > /dev/null 2>&1 || brew install cameroncooke/axe/axe cloudflared
+          axe --version; cloudflared --version
+      - name: Get the app
+        run: |
+          if [ -z "$XCODE_APP" ]; then XCODE_APP=$(ls -d /Applications/Xcode_16*.app | sort -V | tail -1); fi
+          sudo xcode-select -s "$XCODE_APP"; xcodebuild -version
+          if [ -n "$APP_URL" ]; then
+            curl -sSL -o app.zip "$APP_URL"; unzip -q app.zip -d appdir
+          else
+            git clone --depth 1 -b "$BRANCH" "https://github.com/$SRC_REPO.git" src
+            cd src
+            xcodebuild -project Feditext.xcodeproj -scheme Feditext -configuration Debug -sdk iphonesimulator \
+              -destination 'generic/platform=iOS Simulator' -derivedDataPath build \
+              CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM="" PROVISIONING_PROFILE_SPECIFIER="" \
+              CODE_SIGNING_ALLOWED=YES CODE_SIGNING_REQUIRED=NO AD_HOC_CODE_SIGNING_ALLOWED=YES \
+              -skipPackagePluginValidation -skipMacroValidation build 2>&1 | tail -5
+            mkdir -p ../appdir && cp -R build/Build/Products/Debug-iphonesimulator/Feditext.app ../appdir/
+          fi
+          ls appdir
+      - name: Boot the simulator and install
+        run: |
+          UDID=$(xcrun simctl list devices available | grep -E "iPhone 16 Pro \(" | head -1 | grep -oE "[0-9A-F-]{36}")
+          echo "UDID=$UDID" >> "$GITHUB_ENV"
+          xcrun simctl boot "$UDID"; xcrun simctl bootstatus "$UDID" -b > /dev/null
+          xcrun simctl install "$UDID" appdir/Feditext.app
+          xcrun simctl launch "$UDID" "$(/usr/libexec/PlistBuddy -c 'Print CFBundleIdentifier' appdir/Feditext.app/Info.plist)"
+      - name: Serve
+        run: |
+          set +e
+          python3 .github/sim_server.py > server.log 2>&1 &
+          cloudflared tunnel --no-autoupdate --url http://127.0.0.1:8080 > tunnel.log 2>&1 &
+          for i in $(seq 1 60); do URL=$(grep -oE "https://[a-z0-9-]+\.trycloudflare\.com" tunnel.log | head -1); [ -n "$URL" ] && break; sleep 2; done
+          echo "tunnel up"
+          mkdir -p ci-out; echo "$URL" > ci-out/session-url.txt; date -u >> ci-out/session-url.txt
+          git config user.name "feditext-sim-ci"; git config user.email "ci@users.noreply.github.com"
+          git add ci-out/session-url.txt; git commit -q -m "ci: session url"; git pull --rebase -q; git push -q
+          END=$(( $(date +%s) + ${MINUTES:-90} * 60 ))
+          while [ $(date +%s) -lt $END ] && [ ! -f /tmp/quit ]; do sleep 10; done
+          echo > ci-out/session-url.txt; git add ci-out/session-url.txt; git commit -q -m "ci: session closed"; git pull --rebase -q; git push -q
