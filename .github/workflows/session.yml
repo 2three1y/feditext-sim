@@ -48,7 +48,7 @@ jobs:
           if [ -z "$XCODE_APP" ]; then XCODE_APP=$(ls -d /Applications/Xcode_16*.app | sort -V | tail -1); fi
           sudo xcode-select -s "$XCODE_APP"; xcodebuild -version
           if [ -n "$APP_URL" ]; then
-            curl -sSL -o app.zip "$APP_URL"; unzip -q app.zip -d appdir
+            curl -sSL -o app.zip "$APP_URL"; unzip -q app.zip -d appdir; if [ -f appdir/Feditext.app.zip ]; then (cd appdir && unzip -q Feditext.app.zip); fi
           else
             git clone --depth 1 -b "$BRANCH" "https://github.com/$SRC_REPO.git" src
             cd src
