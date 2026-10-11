@@ -1,0 +1,5 @@
+run=4
+size=71639088
+sha256=dd52a3b782b2adfb27e93c1f711ed803251b677ae0b7a8f1abac3c8c0d51791a
+litterbox=https://litter.catbox.moe/db1dsg.zip
+bashupload=
