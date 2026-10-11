@@ -43,16 +43,52 @@ jobs:
       - name: Resolve packages
         working-directory: src
         run: xcodebuild -resolvePackageDependencies -project Feditext.xcodeproj -scheme Feditext -derivedDataPath build 2>&1 | tee ../resolve.log | tail -30
-      - name: Build for iOS Simulator (Debug, unsigned)
+      - name: Build for iOS Simulator (Debug, ad-hoc signed so the app group and keychain entitlements exist)
         working-directory: src
         run: |
           set -o pipefail
-          xcodebuild -project Feditext.xcodeproj -scheme Feditext -configuration Debug \
+          # The app keeps its database in the app-group container; without entitlements that container is nil and the app quits at launch.
+          # Simulator builds need no Apple account: "-" is the local ad-hoc identity.
+          if ! xcodebuild -project Feditext.xcodeproj -scheme Feditext -configuration Debug \
             -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
             -derivedDataPath build \
-            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" DEVELOPMENT_TEAM="" \
+            CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM="" PROVISIONING_PROFILE_SPECIFIER="" \
+            CODE_SIGNING_ALLOWED=YES CODE_SIGNING_REQUIRED=NO AD_HOC_CODE_SIGNING_ALLOWED=YES \
             -skipPackagePluginValidation -skipMacroValidation \
-            build 2>&1 | tee ../build.log | (grep -E "error:|BUILD|Linking" || true) | tail -60
+            build 2>&1 | tee build.log | (grep -E "error:|BUILD|Linking" || true) | tail -60; then
+            echo "ad-hoc build failed; building unsigned and signing by hand" | tee -a build.log
+            xcodebuild -project Feditext.xcodeproj -scheme Feditext -configuration Debug \
+              -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
+              -derivedDataPath build \
+              CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" DEVELOPMENT_TEAM="" \
+              -skipPackagePluginValidation -skipMacroValidation \
+              build 2>&1 | tee -a build.log | (grep -E "error:|BUILD" || true) | tail -40
+            BASE=$(grep FEDITEXT_BUNDLE_ID_BASE Identity.xcconfig | sed 's/.*= *//')
+            /usr/libexec/PlistBuddy -c "Add :com.apple.security.application-groups array" -c "Add :com.apple.security.application-groups:0 string group.$BASE" -c "Add :keychain-access-groups array" -c "Add :keychain-access-groups:0 string $BASE" ent.plist
+            APP=build/Build/Products/Debug-iphonesimulator/Feditext.app
+            for x in "$APP"/PlugIns/*.appex "$APP"/Frameworks/*; do [ -e "$x" ] && codesign --force --sign - --entitlements ent.plist "$x"; done
+            codesign --force --sign - --entitlements ent.plist "$APP"
+          fi
+      - name: Check entitlements and launch it in a simulator here
+        working-directory: src
+        run: |
+          set +e
+          APP=build/Build/Products/Debug-iphonesimulator/Feditext.app
+          { echo "== codesign"; codesign -d --entitlements - --xml "$APP" 2>&1 | plutil -p - 2>&1 | head -40
+            echo "== __entitlements section"; otool -X -s __TEXT __entitlements "$APP/Feditext" 2>&1 | head -5; } | tee ../launch.txt
+          DEV=$(xcrun simctl list devices available | grep -E "iPhone 16 Pro \(" | head -1 | grep -oE "[0-9A-F-]{36}")
+          echo "device $DEV" | tee -a ../launch.txt
+          xcrun simctl boot "$DEV"; xcrun simctl bootstatus "$DEV" -b > /dev/null
+          xcrun simctl install "$DEV" "$APP"
+          BID=$(/usr/libexec/PlistBuddy -c "Print CFBundleIdentifier" "$APP/Info.plist")
+          xcrun simctl launch "$DEV" "$BID" 2>&1 | tee -a ../launch.txt
+          sleep 20
+          xcrun simctl io "$DEV" screenshot ../launch.png
+          echo "== running after 20 s:" | tee -a ../launch.txt
+          xcrun simctl spawn "$DEV" launchctl list 2>/dev/null | grep -i "$BID" | tee -a ../launch.txt
+          ls ~/Library/Logs/DiagnosticReports/ 2>/dev/null | grep -i feditext | tee -a ../launch.txt
+          for f in ~/Library/Logs/DiagnosticReports/*Feditext*; do [ -f "$f" ] && head -c 3000 "$f" >> ../launch.txt; done
+          true
       - name: Zip the app
         run: |
           ls -la src/build/Build/Products/Debug-iphonesimulator/
@@ -69,6 +105,8 @@ jobs:
             resolve.log
             xcode-info.txt
             feditext-commit.txt
+            launch.txt
+            launch.png
           if-no-files-found: warn
       - name: Record logs and links in the repo
         if: always()
@@ -77,6 +115,7 @@ jobs:
           N=${GITHUB_RUN_NUMBER}
           mkdir -p ci-out
           cp feditext-commit.txt ci-out/feditext-commit-$N.txt 2>/dev/null
+          head -c 7000 launch.txt > ci-out/launch-$N.txt 2>/dev/null; cp launch.png ci-out/launch-$N.png 2>/dev/null
           head -c 7000 xcode-info.txt > ci-out/xcode-info-$N.txt 2>/dev/null
           { grep -E "error:|error |fatal|Could not|failed" build.log resolve.log 2>/dev/null | grep -v "warning:" | head -60 | cut -c1-400; echo "--- tail build.log ---"; tail -25 build.log 2>/dev/null | cut -c1-300; } | head -c 7000 > ci-out/errors-$N.txt
           {
