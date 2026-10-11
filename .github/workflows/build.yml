@@ -55,14 +55,14 @@ jobs:
             CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM="" PROVISIONING_PROFILE_SPECIFIER="" \
             CODE_SIGNING_ALLOWED=YES CODE_SIGNING_REQUIRED=NO AD_HOC_CODE_SIGNING_ALLOWED=YES \
             -skipPackagePluginValidation -skipMacroValidation \
-            build 2>&1 | tee build.log | (grep -E "error:|BUILD|Linking" || true) | tail -60; then
-            echo "ad-hoc build failed; building unsigned and signing by hand" | tee -a build.log
+            build 2>&1 | tee ../build.log | (grep -E "error:|BUILD|Linking" || true) | tail -60; then
+            echo "ad-hoc build failed; building unsigned and signing by hand" | tee -a ../build.log
             xcodebuild -project Feditext.xcodeproj -scheme Feditext -configuration Debug \
               -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
               -derivedDataPath build \
               CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" DEVELOPMENT_TEAM="" \
               -skipPackagePluginValidation -skipMacroValidation \
-              build 2>&1 | tee -a build.log | (grep -E "error:|BUILD" || true) | tail -40
+              build 2>&1 | tee -a ../build.log | (grep -E "error:|BUILD" || true) | tail -40
             BASE=$(grep FEDITEXT_BUNDLE_ID_BASE Identity.xcconfig | sed 's/.*= *//')
             /usr/libexec/PlistBuddy -c "Add :com.apple.security.application-groups array" -c "Add :com.apple.security.application-groups:0 string group.$BASE" -c "Add :keychain-access-groups array" -c "Add :keychain-access-groups:0 string $BASE" ent.plist
             APP=build/Build/Products/Debug-iphonesimulator/Feditext.app
