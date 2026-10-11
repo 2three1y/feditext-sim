@@ -1,0 +1,157 @@
+Xcode 16.4
+Build version 16F6
+== Runtimes ==
+iOS 18.5 (18.5 - 22F77) - com.apple.CoreSimulator.SimRuntime.iOS-18-5
+iOS 18.6 (18.6 - 22G86) - com.apple.CoreSimulator.SimRuntime.iOS-18-6
+iOS 26.0 (26.0.1 - 23A8464) - com.apple.CoreSimulator.SimRuntime.iOS-26-0
+iOS 26.1 (26.1 - 23B86) - com.apple.CoreSimulator.SimRuntime.iOS-26-1
+iOS 26.2 (26.2 - 23C54) - com.apple.CoreSimulator.SimRuntime.iOS-26-2
+tvOS 18.5 (18.5 - 22L572) - com.apple.CoreSimulator.SimRuntime.tvOS-18-5
+tvOS 26.1 (26.1 - 23J579) - com.apple.CoreSimulator.SimRuntime.tvOS-26-1
+tvOS 26.2 (26.2 - 23K51) - com.apple.CoreSimulator.SimRuntime.tvOS-26-2
+watchOS 11.5 (11.5 - 22T572) - com.apple.CoreSimulator.SimRuntime.watchOS-11-5
+watchOS 26.1 (26.1 - 23S36) - com.apple.CoreSimulator.SimRuntime.watchOS-26-1
+watchOS 26.2 (26.2 - 23S303) - com.apple.CoreSimulator.SimRuntime.watchOS-26-2
+visionOS 2.3 (2.3 - 22N895) - com.apple.CoreSimulator.SimRuntime.xrOS-2-3
+visionOS 2.4 (2.4 - 22O237) - com.apple.CoreSimulator.SimRuntime.xrOS-2-4
+visionOS 2.5 (2.5 - 22O473) - com.apple.CoreSimulator.SimRuntime.xrOS-2-5
+visionOS 26.1 (26.1 - 23N47) - com.apple.CoreSimulator.SimRuntime.xrOS-26-1
+visionOS 26.2 (26.2 - 23N301) - com.apple.CoreSimulator.SimRuntime.xrOS-26-2
+Command line invocation:
+    /Applications/Xcode_16.4.app/Contents/Developer/usr/bin/xcodebuild -list -project Feditext.xcodeproj
+
+Resolve Package Graph
+
+Fetching from https://github.com/feditext/GRDB.swift.git
+
+Fetching from https://github.com/SDWebImage/SDWebImage
+
+Fetching from https://github.com/ddddxxx/Semver
+
+Fetching from https://github.com/apple/swift-argument-parser
+
+Fetching from https://github.com/feditext/codable-bloom-filter.git
+
+Fetching from https://github.com/feditext/base16.git
+
+Fetching from https://github.com/groue/CombineExpectations.git
+
+Fetching from https://github.com/feditext/blurhash.git
+
+Fetching from https://github.com/apple/swift-collections.git
+
+Fetching from https://github.com/apple/swift-async-algorithms.git
+
+Fetching from https://github.com/scinfu/SwiftSoup.git
+
+Creating working copy of package ‘SDWebImage’
+
+Checking out 5.19.1 of package ‘SDWebImage’
+
+Creating working copy of package ‘swift-argument-parser’
+
+Checking out 1.2.3 of package ‘swift-argument-parser’
+
+Creating working copy of package ‘swift-async-algorithms’
+
+Checking out 1.0.4 of package ‘swift-async-algorithms’
+
+Creating working copy of package ‘swift-collections’
+
+Checking out 1.3.0 of package ‘swift-collections’
+
+Creating working copy of package ‘CombineExpectations’
+
+Checking out 0.10.0 of package ‘CombineExpectations’
+
+Creating working copy of package ‘Semver’
+
+Checking out 0.2.1 of package ‘Semver’
+
+Creating working copy of package ‘SwiftSoup’
+
+Checking out 2.7.2 of package ‘SwiftSoup’
+
+Creating working copy of package ‘blurhash’
+
+Checking out 1.0.0 of package ‘blurhash’
+
+Creating working copy of package ‘GRDB.swift’
+
+Checking out 3ceeed29f (3ceeed2) of package ‘GRDB.swift’
+
+Creating working copy of package ‘base16’
+
+Checking out 1.0.0 of package ‘base16’
+
+Creating working copy of package ‘codable-bloom-filter’
+
+Checking out 1.0.0 of package ‘codable-bloom-filter’
+
+
+Resolved source packages:
+  MastodonAPI: /Users/runner/work/feditext-sim/feditext-sim/src/MastodonAPI
+  CombineInterop: /Users/runner/work/feditext-sim/feditext-sim/src/CombineInterop
+  swift-collections: https://github.com/apple/swift-collections.git @ 1.3.0
+  swift-async-algorithms: https://github.com/apple/swift-async-algorithms.git @ 1.0.4
+  CombineExpectations: https://github.com/groue/CombineExpectations.git @ 0.10.0
+  ServiceLayer: /Users/runner/work/feditext-sim/feditext-sim/src/ServiceLayer
+  Mastodon: /Users/runner/work/feditext-sim/feditext-sim/src/Mastodon
+  SDWebImage: https://github.com/SDWebImage/SDWebImage @ 5.19.1
+  BlurHash: https://github.com/feditext/blurhash.git @ 1.0.0
+  DB: /Users/runner/work/feditext-sim/feditext-sim/src/DB
+  Base16: https://github.com/feditext/base16.git @ 1.0.0
+  Keychain: /Users/runner/work/feditext-sim/feditext-sim/src/Keychain
+  SwiftSoup: https://github.com/scinfu/SwiftSoup.git @ 2.7.2
+  Common: /Users/runner/work/feditext-sim/feditext-sim/src/Common
+  swift-argument-parser: https://github.com/apple/swift-argument-parser @ 1.2.3
+  Siren: /Users/runner/work/feditext-sim/feditext-sim/src/Siren
+  ViewModels: /Users/runner/work/feditext-sim/feditext-sim/src/ViewModels
+  Semver: https://github.com/ddddxxx/Semver @ 0.2.1
+  AppMetadata: /Users/runner/work/feditext-sim/feditext-sim/src/AppMetadata
+  CodableBloomFilter: https://github.com/feditext/codable-bloom-filter.git @ 1.0.0
+  AppUrls: /Users/runner/work/feditext-sim/feditext-sim/src/AppUrls
+  GRDB: https://github.com/feditext/GRDB.swift.git @ 3ceeed29f (3ceeed2)
+  Secrets: /Users/runner/work/feditext-sim/feditext-sim/src/Secrets
+  HTTP: /Users/runner/work/feditext-sim/feditext-sim/src/HTTP
+
+Information about project "Feditext":
+    Targets:
+        Feditext
+        Tests
+        Notification Service Extension
+        Share Extension
+        Action Extension
+
+    Build Configurations:
+        Debug
+        Release
+
+    If no build configuration is specified and -scheme is not passed then "Release" is used.
+
+    Schemes:
+        Action Extension
+        AppMetadata
+        AppUrls
+        CombineInterop
+        Common
+        DB
+        Feditext
+        HTTP
+        Keychain
+        Mastodon
+        MastodonAPI
+        MastodonAPIStubs
+        MastodonAPITool
+        MastodonTests
+        MockKeychain
+        Notification Service Extension
+        PreviewViewModels
+        Secrets
+        ServiceLayer
+        ServiceLayerMocks
+        Share Extension
+        Siren
+        Stubbing
+        ViewModels
+

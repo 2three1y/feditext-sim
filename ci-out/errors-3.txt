@@ -1,0 +1,26 @@
+--- tail build.log ---
+ValidateEmbeddedBinary /Users/runner/work/feditext-sim/feditext-sim/src/build/Build/Products/Debug-iphonesimulator/Feditext.app/PlugIns/Action\ Extension.appex (in target 'Feditext' from project 'Feditext')
+    cd /Users/runner/work/feditext-sim/feditext-sim/src
+    /Applications/Xcode_16.4.app/Contents/Developer/usr/bin/embeddedBinaryValidationUtility /Users/runner/work/feditext-sim/feditext-sim/src/build/Build/Products/Debug-iphonesimulator/Feditext.app/PlugIns/Action\ Extension.appex -info-plist-path /Users/runner/work/feditext-sim/feditext-sim/src/build
+
+AppIntentsSSUTraining (in target 'Feditext' from project 'Feditext')
+    cd /Users/runner/work/feditext-sim/feditext-sim/src
+    /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/appintentsnltrainingprocessor --infoplist-path /Users/runner/work/feditext-sim/feditext-sim/src/build/Build/Products/Debug-iphonesimulator/Feditext.app/Info.plist --temp-dir-path /Users/runner/work/fedite
+2026-10-11 08:16:39.641 appintentsnltrainingprocessor[15755:49002] Parsing options for appintentsnltrainingprocessor
+2026-10-11 08:16:39.642 appintentsnltrainingprocessor[15755:49002] No AppShortcuts found - Skipping.
+
+RegisterExecutionPolicyException /Users/runner/work/feditext-sim/feditext-sim/src/build/Build/Products/Debug-iphonesimulator/Feditext.app (in target 'Feditext' from project 'Feditext')
+    cd /Users/runner/work/feditext-sim/feditext-sim/src
+    builtin-RegisterExecutionPolicyException /Users/runner/work/feditext-sim/feditext-sim/src/build/Build/Products/Debug-iphonesimulator/Feditext.app
+
+Validate /Users/runner/work/feditext-sim/feditext-sim/src/build/Build/Products/Debug-iphonesimulator/Feditext.app (in target 'Feditext' from project 'Feditext')
+    cd /Users/runner/work/feditext-sim/feditext-sim/src
+    builtin-validationUtility /Users/runner/work/feditext-sim/feditext-sim/src/build/Build/Products/Debug-iphonesimulator/Feditext.app -infoplist-subpath Info.plist
+
+Touch /Users/runner/work/feditext-sim/feditext-sim/src/build/Build/Products/Debug-iphonesimulator/Feditext.app (in target 'Feditext' from project 'Feditext')
+    cd /Users/runner/work/feditext-sim/feditext-sim/src
+    /usr/bin/touch -c /Users/runner/work/feditext-sim/feditext-sim/src/build/Build/Products/Debug-iphonesimulator/Feditext.app
+
+note: Run script build phase 'Run Script' will be run during every build because the option to run the script phase "Based on dependency analysis" is unchecked. (in target 'Feditext' from project 'Feditext')
+** BUILD SUCCEEDED **
+

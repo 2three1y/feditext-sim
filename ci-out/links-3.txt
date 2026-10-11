@@ -1,0 +1,6 @@
+run=3
+size=70602474
+sha256=2d2bad4f6696543827a2b5c48415db767f604bb93845bca67d85553fffa31af7
+litterbox=https://litter.catbox.moe/f3ahpb.zip
+bashupload=
+log_litterbox=https://litter.catbox.moe/olcg0n.gz
