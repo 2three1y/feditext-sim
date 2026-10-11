@@ -43,6 +43,11 @@ jobs:
       - name: Resolve packages
         working-directory: src
         run: xcodebuild -resolvePackageDependencies -project Feditext.xcodeproj -scheme Feditext -derivedDataPath build 2>&1 | tee ../resolve.log | tail -30
+      - name: Old GRDB pins only (develop) - make strcmp visible to newer Swift
+        working-directory: src
+        run: |
+          F=build/SourcePackages/checkouts/GRDB.swift/GRDB/Core/StatementAuthorizer.swift
+          if [ -f "$F" ] && ! grep -q "^import Foundation" "$F"; then printf 'import Foundation\n' | cat - "$F" > /tmp/sa.swift && mv /tmp/sa.swift "$F"; echo patched; fi
       - name: Build for iOS Simulator (Debug, ad-hoc signed so the app group and keychain entitlements exist)
         working-directory: src
         run: |
