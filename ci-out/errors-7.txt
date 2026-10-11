@@ -1,0 +1,33 @@
+build.log:2026-10-11 08:35:14.909 xcodebuild[7852:26116] Writing error result bundle to /var/folders/nj/vtw8zd2j31d1gdrtntc5y4600000gn/T/ResultBundle_2026-11-10_08-35-0014.xcresult
+build.log:xcodebuild: error: Unable to find a destination matching the provided destination specifier:
+build.log:		{ platform:iOS, id:dvtdevice-DVTiPhonePlaceholder-iphoneos:placeholder, name:Any iOS Device, error:iOS 18.2 is not installed. To use with Xcode, first download and install the platform }
+build.log:ad-hoc build failed; building unsigned and signing by hand
+build.log:2026-10-11 08:35:18.599 xcodebuild[8230:27120] Writing error result bundle to /var/folders/nj/vtw8zd2j31d1gdrtntc5y4600000gn/T/ResultBundle_2026-11-10_08-35-0018.xcresult
+build.log:xcodebuild: error: Unable to find a destination matching the provided destination specifier:
+build.log:		{ platform:iOS, id:dvtdevice-DVTiPhonePlaceholder-iphoneos:placeholder, name:Any iOS Device, error:iOS 18.2 is not installed. To use with Xcode, first download and install the platform }
+--- tail build.log ---
+  Keychain: /Users/runner/work/feditext-sim/feditext-sim/src/Keychain
+  ViewModels: /Users/runner/work/feditext-sim/feditext-sim/src/ViewModels
+  MastodonAPI: /Users/runner/work/feditext-sim/feditext-sim/src/MastodonAPI
+  SDWebImage: https://github.com/SDWebImage/SDWebImage @ 5.13.5
+  CombineExpectations: https://github.com/groue/CombineExpectations.git @ 0.10.0
+  DB: /Users/runner/work/feditext-sim/feditext-sim/src/DB
+  ServiceLayer: /Users/runner/work/feditext-sim/feditext-sim/src/ServiceLayer
+  BlurHash: https://github.com/metabolist/blurhash.git @ 1.0.0
+  Base16: https://github.com/metabolist/base16.git @ 1.0.0
+  HTTP: /Users/runner/work/feditext-sim/feditext-sim/src/HTTP
+  Mastodon: /Users/runner/work/feditext-sim/feditext-sim/src/Mastodon
+  GRDB: https://github.com/metabolist/GRDB.swift.git @ a6ff285 (a6ff285)
+  CodableBloomFilter: https://github.com/metabolist/codable-bloom-filter.git @ 1.0.0
+
+2026-10-11 08:35:18.599 xcodebuild[8230:27120] Writing error result bundle to /var/folders/nj/vtw8zd2j31d1gdrtntc5y4600000gn/T/ResultBundle_2026-11-10_08-35-0018.xcresult
+xcodebuild: error: Unable to find a destination matching the provided destination specifier:
+		{ generic:1, platform:iOS Simulator }
+
+	Available destinations for the "Feditext" scheme:
+		{ platform:macOS, arch:arm64, variant:Mac Catalyst, id:6686a7504287332d57245d29a434215a27a5fac9, name:My Mac }
+		{ platform:macOS, arch:x86_64, variant:Mac Catalyst, id:6686a7504287332d57245d29a434215a27a5fac9, name:My Mac }
+		{ platform:macOS, variant:Mac Catalyst, name:Any Mac }
+
+	Ineligible destinations for the "Feditext" scheme:
+		{ platform:iOS, id:dvtdevice-DVTiPhonePlaceholder-iphoneos:placeholder, name:Any iOS Device, error:iOS 18.2 is not installed. To use with Xcode, first download and install the platform }

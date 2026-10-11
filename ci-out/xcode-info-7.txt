@@ -1,0 +1,129 @@
+Xcode 16.2
+Build version 16C5032a
+== Runtimes ==
+iOS 18.5 (18.5 - 22F77) - com.apple.CoreSimulator.SimRuntime.iOS-18-5
+iOS 18.6 (18.6 - 22G86) - com.apple.CoreSimulator.SimRuntime.iOS-18-6
+iOS 26.0 (26.0.1 - 23A8464) - com.apple.CoreSimulator.SimRuntime.iOS-26-0
+iOS 26.1 (26.1 - 23B86) - com.apple.CoreSimulator.SimRuntime.iOS-26-1
+iOS 26.2 (26.2 - 23C54) - com.apple.CoreSimulator.SimRuntime.iOS-26-2
+tvOS 18.5 (18.5 - 22L572) - com.apple.CoreSimulator.SimRuntime.tvOS-18-5
+tvOS 26.1 (26.1 - 23J579) - com.apple.CoreSimulator.SimRuntime.tvOS-26-1
+tvOS 26.2 (26.2 - 23K51) - com.apple.CoreSimulator.SimRuntime.tvOS-26-2
+watchOS 11.5 (11.5 - 22T572) - com.apple.CoreSimulator.SimRuntime.watchOS-11-5
+watchOS 26.1 (26.1 - 23S36) - com.apple.CoreSimulator.SimRuntime.watchOS-26-1
+watchOS 26.2 (26.2 - 23S303) - com.apple.CoreSimulator.SimRuntime.watchOS-26-2
+visionOS 2.3 (2.3 - 22N895) - com.apple.CoreSimulator.SimRuntime.xrOS-2-3
+visionOS 2.4 (2.4 - 22O237) - com.apple.CoreSimulator.SimRuntime.xrOS-2-4
+visionOS 2.5 (2.5 - 22O473) - com.apple.CoreSimulator.SimRuntime.xrOS-2-5
+visionOS 26.1 (26.1 - 23N47) - com.apple.CoreSimulator.SimRuntime.xrOS-26-1
+visionOS 26.2 (26.2 - 23N301) - com.apple.CoreSimulator.SimRuntime.xrOS-26-2
+Command line invocation:
+    /Applications/Xcode_16.2.app/Contents/Developer/usr/bin/xcodebuild -list -project Feditext.xcodeproj
+
+User defaults from command line:
+    IDEPackageSupportUseBuiltinSCM = YES
+
+Resolve Package Graph
+
+Fetching from https://github.com/metabolist/GRDB.swift.git
+
+Fetching from https://github.com/groue/CombineExpectations.git
+
+Fetching from https://github.com/metabolist/codable-bloom-filter.git
+
+Fetching from https://github.com/ddddxxx/Semver
+
+Fetching from https://github.com/metabolist/blurhash.git
+
+Fetching from https://github.com/metabolist/base16.git
+
+Fetching from https://github.com/scinfu/SwiftSoup.git
+
+Fetching from https://github.com/SDWebImage/SDWebImage
+
+Creating working copy of package ‘base16’
+
+Checking out 1.0.0 of package ‘base16’
+
+Creating working copy of package ‘SDWebImage’
+
+Checking out 5.13.5 of package ‘SDWebImage’
+
+Creating working copy of package ‘blurhash’
+
+Checking out 1.0.0 of package ‘blurhash’
+
+Creating working copy of package ‘GRDB.swift’
+
+Checking out a6ff285 (a6ff285) of package ‘GRDB.swift’
+
+Creating working copy of package ‘codable-bloom-filter’
+
+Checking out 1.0.0 of package ‘codable-bloom-filter’
+
+Creating working copy of package ‘SwiftSoup’
+
+Checking out 2.4.3 of package ‘SwiftSoup’
+
+Creating working copy of package ‘Semver’
+
+Checking out 0.2.1 of package ‘Semver’
+
+Creating working copy of package ‘CombineExpectations’
+
+Checking out 0.10.0 of package ‘CombineExpectations’
+
+
+Resolved source packages:
+  Semver: https://github.com/ddddxxx/Semver @ 0.2.1
+  Keychain: /Users/runner/work/feditext-sim/feditext-sim/src/Keychain
+  Mastodon: /Users/runner/work/feditext-sim/feditext-sim/src/Mastodon
+  CombineExpectations: https://github.com/groue/CombineExpectations.git @ 0.10.0
+  SwiftSoup: https://github.com/scinfu/SwiftSoup.git @ 2.4.3
+  Base16: https://github.com/metabolist/base16.git @ 1.0.0
+  Secrets: /Users/runner/work/feditext-sim/feditext-sim/src/Secrets
+  DB: /Users/runner/work/feditext-sim/feditext-sim/src/DB
+  BlurHash: https://github.com/metabolist/blurhash.git @ 1.0.0
+  HTTP: /Users/runner/work/feditext-sim/feditext-sim/src/HTTP
+  ServiceLayer: /Users/runner/work/feditext-sim/feditext-sim/src/ServiceLayer
+  AppUrls: /Users/runner/work/feditext-sim/feditext-sim/src/AppUrls
+  GRDB: https://github.com/metabolist/GRDB.swift.git @ a6ff285 (a6ff285)
+  SDWebImage: https://github.com/SDWebImage/SDWebImage @ 5.13.5
+  MastodonAPI: /Users/runner/work/feditext-sim/feditext-sim/src/MastodonAPI
+  CodableBloomFilter: https://github.com/metabolist/codable-bloom-filter.git @ 1.0.0
+  ViewModels: /Users/runner/work/feditext-sim/feditext-sim/src/ViewModels
+
+Information about project "Feditext":
+    Targets:
+        Feditext
+        Tests
+        Notification Service Extension
+        Share Extension
+        Action Extension
+
+    Build Configurations:
+        Debug
+        Release
+
+    If no build configuration is specified and -scheme is not passed then "Release" is used.
+
+    Schemes:
+        Action Extension
+        AppUrls
+        DB
+        Feditext
+        HTTP
+        Keychain
+        Mastodon
+        MastodonAPI
+        MastodonAPIStubs
+        MockKeychain
+        Notification Service Extension
+        PreviewViewModels
+        Secrets
+        ServiceLayer
+        ServiceLayerMocks
+        Share Extension
+        Stubbing
+        ViewModels
+
